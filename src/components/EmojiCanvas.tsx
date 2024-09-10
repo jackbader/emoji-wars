@@ -8,6 +8,7 @@ interface EmojiCanvasProps {
 }
 
 type OtherPlayerType = {
+  id: string; // Add an id field to track players by their socket id
   emoji: string;
   x: number;
   y: number;
@@ -19,8 +20,9 @@ const EmojiCanvas: FC<EmojiCanvasProps> = ({ selectedEmoji }) => {
     x: 100,
     y: 100,
     emoji: selectedEmoji,
+    id: socket.id, // Track the current player's id (socket id)
   });
-  const [otherPlayers, setOtherPlayers] = useState([]);
+  const [otherPlayers, setOtherPlayers] = useState<OtherPlayerType[]>([]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -100,8 +102,12 @@ const EmojiCanvas: FC<EmojiCanvasProps> = ({ selectedEmoji }) => {
   }, [player]);
 
   useEffect(() => {
-    socket.on("updatePlayers", (players) => {
-      setOtherPlayers(players);
+    socket.on("updatePlayers", (players: OtherPlayerType[]) => {
+      // Filter out the current player from the players list based on socket id
+      const otherPlayers = players.filter(
+        (otherPlayer) => otherPlayer.id !== socket.id
+      );
+      setOtherPlayers(otherPlayers);
     });
   }, []);
 
