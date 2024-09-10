@@ -39,6 +39,8 @@ const EmojiCanvas: FC<EmojiCanvasProps> = ({ selectedEmoji }) => {
     // Get the device pixel ratio (defaults to 1 for normal displays)
     const dpr = window.devicePixelRatio || 1;
 
+    console.log("dpr", dpr);
+
     // Set canvas display size (CSS pixels)
     const canvasWidth = 1000;
     const canvasHeight = 1000;
