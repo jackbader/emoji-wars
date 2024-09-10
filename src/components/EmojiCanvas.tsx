@@ -29,28 +29,58 @@ const EmojiCanvas: FC<EmojiCanvasProps> = ({ selectedEmoji }) => {
       return;
     }
 
+    // Get the 2D drawing context
     const ctx = canvas.getContext("2d");
-    const canvasWidth = canvas.width;
-    const canvasHeight = canvas.height;
 
     if (!ctx) {
       return;
     }
 
+    // Get the device pixel ratio (defaults to 1 for normal displays)
+    const dpr = window.devicePixelRatio || 1;
+
+    // Set canvas display size (CSS pixels)
+    const canvasWidth = 1000;
+    const canvasHeight = 1000;
+
+    // Set canvas internal size to the device pixel ratio size
+    canvas.width = canvasWidth * dpr;
+    canvas.height = canvasHeight * dpr;
+
+    // Scale the canvas context to match the pixel ratio
+    ctx.scale(dpr, dpr);
+
+    // Apply CSS size to maintain correct appearance
+    canvas.style.width = `${canvasWidth}px`;
+    canvas.style.height = `${canvasHeight}px`;
+
+    // Function to draw emoji
     const drawEmoji = (emoji: string, x: number, y: number) => {
       ctx.font = "40px Arial";
       ctx.fillText(emoji, x, y);
     };
 
+    // Function to clear and redraw the canvas
     const drawCanvas = () => {
+      // Clear the entire canvas before redrawing
       ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+
+      // Draw the player's emoji
       drawEmoji(player.emoji, player.x, player.y);
+
+      // Draw other players' emojis
       otherPlayers.forEach((otherPlayer: OtherPlayerType) => {
         drawEmoji(otherPlayer.emoji, otherPlayer.x, otherPlayer.y);
       });
     };
 
+    // Draw the canvas initially
     drawCanvas();
+
+    // Optional: return a cleanup function if necessary
+    return () => {
+      ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+    };
   }, [player, otherPlayers]);
 
   useEffect(() => {
@@ -84,8 +114,8 @@ const EmojiCanvas: FC<EmojiCanvasProps> = ({ selectedEmoji }) => {
   return (
     <canvas
       ref={canvasRef}
-      width={1000}
-      height={1000}
+      width={500}
+      height={500}
       style={{ border: "1px solid black" }}
     />
   );
