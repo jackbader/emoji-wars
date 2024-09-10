@@ -1,7 +1,7 @@
 import { FC, useEffect, useRef, useState } from "react";
 import io from "socket.io-client";
 
-const socket = io("http://localhost:4000");
+const socket = io(import.meta.env.VITE_SOCKET_SERVER_URL);
 
 interface EmojiCanvasProps {
   selectedEmoji: string;
