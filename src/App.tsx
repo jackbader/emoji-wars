@@ -1,53 +1,44 @@
-import { useEffect, useState } from "react";
-import "./App.css";
+import { useState } from "react";
+import EmojiCanvas from "./components/EmojiCanvas";
 
-const initialState = new Array(100000).fill(0);
+const App = () => {
+  const [selectedEmoji, setSelectedEmoji] = useState<string | null>(null);
 
-function App() {
-  const [state, setState] = useState(initialState);
-  const [currentPos, setCurrentPost] = useState(0);
+  const emojis = ["😀", "😎", "😍", "👾", "🐱", "🌟", "🚀", "⚽"];
 
-  const moveRight = () => {
-    setCurrentPost((prev) => prev + 1);
+  const handleEmojiClick = (emoji: string) => {
+    setSelectedEmoji(emoji); // Set the selected emoji
   };
 
-  useEffect(() => {
-    const keyDownListener = (e) => {
-      if (e.keyCode === 39) {
-        // arrow right
-        moveRight();
-      }
-    };
-
-    window.addEventListener("keydown", keyDownListener);
-
-    return () => window.removeEventListener("keydown", keyDownListener);
-  }, []);
-
   return (
-    <div
-      style={{
-        display: "flex",
-        overflow: "wrap",
-        width: "100vw",
-        flexWrap: "wrap",
-      }}
-    >
-      {state.map((item, i) => (
-        <div
-          style={{
-            border: "1px solid black",
-            height: "26px",
-            width: "26px",
-            backgroundColor: currentPos === i ? "red" : "white",
-          }}
-          key={i}
-        >
-          {item}
+    <div>
+      {!selectedEmoji ? (
+        <div>
+          <h1>Choose Your Emoji to Enter the World</h1>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
+            {emojis.map((emoji, index) => (
+              <div
+                key={index}
+                onClick={() => handleEmojiClick(emoji)}
+                style={{
+                  cursor: "pointer",
+                  fontSize: "40px",
+                  padding: "10px",
+                  border: "1px solid #ccc",
+                  borderRadius: "8px",
+                  transition: "0.3s",
+                }}
+              >
+                {emoji}
+              </div>
+            ))}
+          </div>
         </div>
-      ))}
+      ) : (
+        <EmojiCanvas selectedEmoji={selectedEmoji} />
+      )}
     </div>
   );
-}
+};
 
 export default App;
