@@ -36,21 +36,13 @@ const EmojiCanvas: FC<EmojiCanvasProps> = ({ selectedEmoji }) => {
       return;
     }
 
-    // Get the device pixel ratio (defaults to 1 for normal displays)
-    const dpr = window.devicePixelRatio || 1;
-
-    console.log("dpr", dpr);
-
     // Set canvas display size (CSS pixels)
-    const canvasWidth = 1000;
-    const canvasHeight = 1000;
+    const canvasWidth = 600;
+    const canvasHeight = 600;
 
     // Set canvas internal size to the device pixel ratio size
-    canvas.width = canvasWidth * dpr;
-    canvas.height = canvasHeight * dpr;
-
-    // Scale the canvas context to match the pixel ratio
-    ctx.scale(dpr, dpr);
+    canvas.width = canvasWidth;
+    canvas.height = canvasHeight;
 
     // Apply CSS size to maintain correct appearance
     canvas.style.width = `${canvasWidth}px`;
@@ -96,7 +88,7 @@ const EmojiCanvas: FC<EmojiCanvasProps> = ({ selectedEmoji }) => {
       if (key === "ArrowLeft") newX -= 10;
       if (key === "ArrowRight") newX += 10;
 
-      if (newX >= 0 && newX <= 960 && newY >= 0 && newY <= 960) {
+      if (newX >= 0 && newX <= 560 && newY >= 40 && newY <= 600) {
         const updatedPlayer = { ...player, x: newX, y: newY };
         setPlayer(updatedPlayer);
         socket.emit("playerMoved", updatedPlayer);
